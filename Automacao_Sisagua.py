@@ -11,16 +11,21 @@ url = 'http://sisagua.saude.gov.br/sisagua/login.jsf'
 
 options = webdriver.FirefoxOptions()
 
-#! Dados a serem alimentados para o funcionamento da automação
+
+#! ################### Dados a serem alimentados para o funcionamento da automação ###################
 login = '' # Inserir CPF ou email cadastrado entre os apóstrofos
 
 senha = '' # Senha para acesso ao sistema
 
-pocos_para_lancar = ['Morumbi','Nacoes','Village','Ubirama'] #* O nome de cada poço inserido nessa lista deve ser compatível com o nome do arquivo CSV para lançamento (NOME_DO_POCO.csv) e o nome que está cadastrado no sistema 
+pocos_para_lancar = ['poco1','poco2','poco3','poco4'] #* O nome de cada poço inserido nessa lista deve ser compatível com o nome do arquivo CSV para lançamento (NOME_DO_POCO.csv) e o nome que está cadastrado no sistema 
 
-ano_lancamento = '2024' #* Inserir o ano a ser lançado
+ano_lancamento = '2024' # Inserir dentro dos apóstrofos o ano a ser lançado
 
-semestre = 1 #* Inserir qual o semestre a ser lançado
+semestre = 1 # Inserir qual o semestre a ser lançado (1 para primeiro semestre, 2 para segundo)
+
+data_coleta_amostra = '' #* Inserir a data de coleta da amostra no formato DDMMYYYY (exemplo: 01012024 para 01 de janeiro de 2024)
+#! ###################################################################################################
+
 
 #* Login no sistema
 driver = Firefox()
@@ -38,8 +43,8 @@ botao = driver.find_element(By.ID, "btnEntrar")
 botao.click()
 sleep(1)
 
-def preenchimento(parametro):
     # Esta função tem o objetivo de varrer todos os parâmetros fisico-químicos de uma seção do SISÁGUA, consultar o dataframe do resultado relatado em relatório e lançá-lo de acordo com seu resultado, obedecendo às regras de preenchimento do sistema. O argumento passado para ela é uma lista python com os parâmetros de um dos grandes blocos de lançamento do site (substâncias inorgânicas, orgânicas, agrotóxicos e organolépticos)
+def preenchimento(parametro):
 
     for indice, item in enumerate(parametro):
         try:
@@ -49,7 +54,7 @@ def preenchimento(parametro):
             
 
             campo = driver.find_element(By.ID, f"accordionAnalise:{indice}:loopPA:0:loopCA:0:dataColeta_input")
-            campo.send_keys("26012024"+Keys.TAB)
+            campo.send_keys(data_coleta_amostra + Keys.TAB)
             sleep(5)
             
             campo = driver.find_element(By.ID, f"accordionAnalise:{indice}:loopPA:0:loopCA:1:dataAnalise_input")
@@ -112,7 +117,7 @@ for poco in pocos_para_lancar:
         link_parcial.click()
         sleep(5)
 
-    botao = driver.find_element(By.ID, f'tabView:{"0" if semestre==1 else "1"}:listaEtas:0:detalharBTN')
+    botao = driver.find_element(By.ID, f'tabView:{str(semestre-1)}:listaEtas:0:detalharBTN')
     botao.click()
     sleep(10)
 
@@ -123,7 +128,7 @@ for poco in pocos_para_lancar:
 
     #!LANCAMENTO INORGANICOS
     INORGS = ['Antimônio', 'Arsênio', 'Bário', 'Cádmio', 'Chumbo', 'Cobre', 'Cromo', 'Mercúrio', 'Níquel', 'Nitrato', 'Nitrito', 'Selênio', 'Urânio']
-    botao = driver.find_element(By.ID, f'tabView:{"0" if semestre==1 else "1"}:j_idt239:0:j_idt244')
+    botao = driver.find_element(By.ID, f'tabView:{str(semestre-1)}:j_idt239:0:j_idt244')
     botao.click()
     sleep(5)
 
@@ -131,7 +136,7 @@ for poco in pocos_para_lancar:
 
     #! LANCAMENTO ORGANICOS
     ORGS = ['Dicloroetano', 'Acrilamida', 'Benzeno', 'pireno', 'Cloreto de Vinila', 'ftalato', 'Diclorometano', 'Dioxano', 'Epicloridrina', 'Etilbenzeno', 'Pentaclorofenol', 'Tetracloreto de Carbono', 'Tetracloroeteno', 'Tolueno', 'Tricloroeteno', 'Xilenos']
-    botao = driver.find_element(By.ID, f'tabView:{"0" if semestre==1 else "1"}:j_idt239:1:j_idt244')
+    botao = driver.find_element(By.ID, f'tabView:{str(semestre-1)}:j_idt239:1:j_idt244')
     botao.click()
     sleep(5)
 
@@ -139,7 +144,7 @@ for poco in pocos_para_lancar:
 
     #! LANCAMENTO AGROTOXICOS
     AGROTOX = ['2,4', 'Alaclor', 'Aldicarb', 'Aldrin', 'Ametrina', 'Atrazina', 'Carbendazim', 'Carbofurano', 'Ciproconazol', 'Clordano', 'Clorotalonil', 'Clorpirif', 'DDT', 'Difenoconazol', 'Dimetoato', 'Diuron', 'Epoxiconazol', 'Fipronil', 'Flutriafol', 'Glifosato', 'Hidroxi', 'Lindano', 'Malation', 'Mancozebe', 'Metamidofós', 'Metolacloro', 'Metribuzim', 'Molinato', 'Paraquate', 'Picloram', 'Profenof', 'Propargito', 'Proti', 'Simazina', 'Tebuconazol', 'Terbuf', 'Tiametoxam', 'Tiodicarbe', 'Tiram', 'Trifluralina']
-    botao = driver.find_element(By.ID, f'tabView:{"0" if semestre==1 else "1"}:j_idt239:2:j_idt244')
+    botao = driver.find_element(By.ID, f'tabView:{str(semestre-1)}:j_idt239:2:j_idt244')
     botao.click()
     sleep(5)
 
@@ -147,7 +152,7 @@ for poco in pocos_para_lancar:
 
     #! Lancamento - Organolepticos
     ORGANOLEP = ['1,2 Diclorobenzeno', '1,4 Diclorobenzeno', 'Alumínio', 'Amônia', 'Cloreto -', 'Dureza', 'Ferro', 'Gosto e odor', 'Manganês', 'Monoclorobenzeno', 'Sódio', 'Sólidos', 'Sulfato', 'Sulfeto de hidrogênio', 'Zinco']
-    botao = driver.find_element(By.ID, f'tabView:{"0" if semestre==1 else "1"}:j_idt239:3:j_idt244')
+    botao = driver.find_element(By.ID, f'tabView:{str(semestre-1)}:j_idt239:3:j_idt244')
     botao.click()
     sleep(5)
 
