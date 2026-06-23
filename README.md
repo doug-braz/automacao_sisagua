@@ -1,5 +1,7 @@
 # 💧💻 Automação SISAGUA
 
+<img width="1920" height="1080" alt="Gif funcionamento" src="https://github.com/user-attachments/assets/0dfa353c-47c3-4f7b-b8b1-90003a0f727c" />
+
 ## 📋 Descrição
 
 Automação desenvolvida em Python para o lançamento de dados de qualidade da água potável no sistema **SISAGUA** (Sistema de Informação de Vigilância da Qualidade da Água para Consumo Humano), do Ministério da Saúde.
